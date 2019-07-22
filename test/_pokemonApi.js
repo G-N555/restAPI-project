@@ -2,6 +2,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const server = require("../src/server");
+chai.should();
 
 /*
  * This sprint you will have to create all tests yourself, TDD style.
@@ -11,6 +12,27 @@ const server = require("../src/server");
 describe("Pokemon API Server", () => {
   let request;
   beforeEach(() => {
-    request = chai.request(server);
+    request = chai.request(server.setUpExpressServer());
+  });
+
+  describe("should return a full list of Pokemon", () => {
+    it("should return a full list", async () => {
+      const res = await request.get("/api/pokemon");
+      res.should.be.json;
+      res.body.length.should.eql(151);
+    });
+    it("should return the number of pokemons", async () => {
+      const limit = 5;
+      const res = await request.get(`/api/pokemon`).query({ limit: 5 });
+      res.should.be.json;
+      res.body.length.should.eql(limit);
+    });
+  });
+  describe("should add a pokemon", () => {
+    it("should add a pokemon", async () => {
+      const res = await request.post("/api/pokemon");
+      res.should.be.json;
+      res.body.length.should.eql(152);
+    });
   });
 });
