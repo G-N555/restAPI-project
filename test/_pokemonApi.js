@@ -52,4 +52,16 @@ describe("Pokemon API Server", () => {
       res.body.name.should.eql("Go");
     });
   });
+  describe("should delete a given pokemon", () => {
+    it("should delete the given pokemon", async () => {
+      const res = await request.delete("/api/pokemon/bulbasaur");
+      res.body.name.should.eql("Bulbasaur");
+    });
+  });
+  describe("should return the evolutions", () => {
+    it("should return an array", async () => {
+      const res = await request.get("/api/pokemon/:idOrName/evolutions");
+      //res.body.length.should.eql()
+    });
+  });
 });

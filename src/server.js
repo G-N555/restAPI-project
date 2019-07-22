@@ -20,40 +20,44 @@ const setUpExpressServer = () => {
     pokeData.pokemon.push(req.body);
     res.json(pokeData.pokemon);
   });
-  app.get("/api/pokemon/:id", (req, res) => {
-    let pokeFindById;
-    if (Number(req.params.id)) {
-      pokeFindById = pokeData.pokemon.find(
-        (pokemon) => ~~pokemon.id === ~~req.params.id
-      );
-    } else {
-      pokeFindById = pokeData.pokemon.find(
-        (pokemon) => pokemon.name.toLowerCase() === req.params.id.toLowerCase()
-      );
+
+  function findPokemon(req, param) {
+    const id = req.params[param];
+    const pokemons = pokeData.pokemon;
+    if (Number(id)) {
+      return pokemons.find((pokemon) => ~~pokemon.id === ~~id);
     }
+    return pokemons.find(
+      (pokemon) => pokemon.name.toLowerCase() === id.toLowerCase()
+    );
+  }
+  app.get("/api/pokemon/:id", (req, res) => {
+    const pokeFindById = findPokemon(req, "id");
+
     if (pokeFindById === undefined) {
       res.sendStatus(404);
     } else {
       res.json(pokeFindById);
     }
   });
+
   app.patch("/api/pokemon/:idOrName", (req, res) => {
-    let pokeFindById;
-    if (Number(req.params.id)) {
-      pokeFindById = pokeData.pokemon.find(
-        (pokemon) => ~~pokemon.id === ~~req.params.id
-      );
-    } else {
-      pokeFindById = pokeData.pokemon.find(
-        (pokemon) =>
-          pokemon.name.toLowerCase() === req.params.idOrName.toLowerCase()
-      );
-    }
+    const pokeFindById = findPokemon(req, "idOrName");
     if (pokeFindById === undefined) {
       res.sendStatus(404);
     } else {
       _.extend(pokeFindById, req.body);
       res.json(pokeFindById);
+    }
+  });
+  app.delete("/api/pokemon/:idOrName", (req, res) => {
+    const pokeFindById = findPokemon(req, "idOrName");
+    if (pokeFindById === undefined) {
+      res.sendStatus(404);
+    } else {
+      const index = pokeData.pokemon.indexOf(pokeFindById);
+      const pokemon = pokeData.pokemon.splice(index, 1);
+      res.json(...pokemon);
     }
   });
 
