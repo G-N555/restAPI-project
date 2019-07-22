@@ -35,4 +35,10 @@ describe("Pokemon API Server", () => {
       res.body.length.should.eql(152);
     });
   });
+  describe("should get a pokemon by Id", () => {
+    it("should get a pokemon by Id", async () => {
+      const res = await request.get("/api/pokemon/42");
+      res.body[0].name.should.eql("Golbat");
+    });
+  });
 });

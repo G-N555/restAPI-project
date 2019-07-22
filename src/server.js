@@ -16,19 +16,6 @@ const setUpExpressServer = () => {
     }
   });
   app.post("/api/pokemon", (req, res) => {
-    /*const newPokemon = {
-      id: "152",
-      name: "Go",
-      classification: "Human Pokémon",
-      types: ["Grass", "Poison"],
-      resistant: ["Police", "Electric", "Grass", "Fighting", "Fairy"],
-      weaknesses: ["Fire", "Ice", "Flying", "Psychic"],
-      weight: {
-        minimum: "60.04kg",
-        maximum: "75.76kg",
-      },
-    };*/
-    //req.pokeData = newPokemon;
     pokeData.pokemon.push(req.body);
     res.json(pokeData.pokemon);
   });
