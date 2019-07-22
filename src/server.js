@@ -1,5 +1,6 @@
 const pokeData = require("./data");
 const express = require("express");
+const _ = require("underscore");
 /**
  * Use this file to create and set up your express server
  */
@@ -36,16 +37,25 @@ const setUpExpressServer = () => {
       res.json(pokeFindById);
     }
   });
-  //   app.get("/api/pokemon/:name", (req, res) => {
-  //     const pokeFindByName = pokeData.pokemon.find(
-  //       (pokemon) => pokemon.name.toLowerCase() === req.params.name.toLowerCase()
-  //     );
-  //     if (pokeFindByName === undefined) {
-  //       res.sendStatus(404);
-  //     } else {
-  //       res.json(pokeFindByName);
-  //     }
-  //   });
+  app.patch("/api/pokemon/:idOrName", (req, res) => {
+    let pokeFindById;
+    if (Number(req.params.id)) {
+      pokeFindById = pokeData.pokemon.find(
+        (pokemon) => ~~pokemon.id === ~~req.params.id
+      );
+    } else {
+      pokeFindById = pokeData.pokemon.find(
+        (pokemon) =>
+          pokemon.name.toLowerCase() === req.params.idOrName.toLowerCase()
+      );
+    }
+    if (pokeFindById === undefined) {
+      res.sendStatus(404);
+    } else {
+      _.extend(pokeFindById, req.body);
+      res.json(pokeFindById);
+    }
+  });
 
   return app;
 };

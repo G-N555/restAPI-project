@@ -45,4 +45,11 @@ describe("Pokemon API Server", () => {
       res.body.id.should.eql("151");
     });
   });
+  describe("should modify something in the pokemon", () => {
+    it("should modify name", async () => {
+      const payload = { name: "Go" };
+      const res = await request.patch("/api/pokemon/pikachu").send(payload);
+      res.body.name.should.eql("Go");
+    });
+  });
 });
