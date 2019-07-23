@@ -64,4 +64,17 @@ describe("Pokemon API Server", () => {
       res.body.length.should.eql(2);
     });
   });
+  describe.only("should return the previous evolutions", () => {
+    it("should return an array", async () => {
+      const res = await request.get(
+        "/api/pokemon/Venusaur/evolutions/previous"
+      );
+      res.body.length.should.eql(2);
+    });
+
+    it("should return an array", async () => {
+      const res = await request.get("/api/pokemon/17/evolutions/previous");
+      res.body.should.deep.eql([{ id: 16, name: "Pidgey" }]);
+    });
+  });
 });

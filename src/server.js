@@ -73,6 +73,22 @@ const setUpExpressServer = () => {
       res.json(evolutions);
     }
   });
+  app.get("/api/pokemon/:idOrName/evolutions/previous", (req, res) => {
+    const pokeFindById = findPokemon(req, "idOrName");
+    if (pokeFindById === undefined) {
+      res.sendStatus(404);
+    } else {
+      let evolutions = pokeFindById["Previous evolution(s)"];
+      if (evolutions === undefined) {
+        evolutions = [];
+      }
+      if (!Array.isArray(evolutions)) {
+        evolutions = [evolutions];
+      }
+      res.json(evolutions);
+    }
+  });
+
   return app;
 };
 
