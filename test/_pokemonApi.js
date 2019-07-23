@@ -133,4 +133,39 @@ describe("Pokemon API Server", () => {
       res.body.length.should.eql(limit);
     });
   });
+
+  describe("should return the list of all fast attacks", () => {
+    it("should return the list of all fast attacks", async () => {
+      const res = await request.get("/api/attacks/fast");
+      res.body.length.should.eql(41);
+    });
+    it("should return the number of fast attacks", async () => {
+      const limit = 5;
+      const res = await request.get(`/api/attacks/fast`).query({ limit: 5 });
+      res.should.be.json;
+      res.body.length.should.eql(limit);
+    });
+  });
+
+  describe("should return the list of all special attacks", () => {
+    it("should return the list of all special attacks", async () => {
+      const res = await request.get("/api/attacks/special");
+      res.body.length.should.eql(83);
+    });
+    it("should return the number of special attacks", async () => {
+      const limit = 5;
+      const res = await request.get(`/api/attacks/special`).query({ limit: 5 });
+      res.should.be.json;
+      res.body.length.should.eql(limit);
+    });
+  });
+
+  describe("should return the name of an attack", () => {
+    it("should return a specific attack by name", async () => {
+      const attack = "Tackle";
+      const res = await request.get(`/api/attacks/${attack}`);
+      res.should.be.json;
+      res.body.name.should.eql(attack);
+    });
+  });
 });

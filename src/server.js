@@ -146,6 +146,51 @@ const setUpExpressServer = () => {
     }
   });
 
+  app.get("/api/attacks/fast", (req, res) => {
+    const limit = req.query.limit;
+    if (limit === undefined) {
+      res.json(pokeData.attacks.fast);
+    } else {
+      const fast = pokeData.attacks.fast;
+      res.json(fast.slice(0, limit));
+    }
+  });
+
+  app.get("/api/attacks/special", (req, res) => {
+    const limit = req.query.limit;
+    if (limit === undefined) {
+      res.json(pokeData.attacks.special);
+    } else {
+      const special = pokeData.attacks.special;
+      res.json(special.slice(0, limit));
+    }
+  });
+  app.get("/api/attacks/:name", (req, res) => {
+    const fast = pokeData.attacks.fast;
+    const special = pokeData.attacks.special;
+    const combine = fast.concat(special);
+    const attack = _.find(combine, (attack) => attack.name === req.params.name);
+
+    if (attack === undefined) {
+      res.sendStatus(404);
+    } else {
+      res.json(attack);
+    }
+  });
+  app.get("/api/attacks/:name/pokemon", (req, res) => {
+    const pokemon = pokeData.pokemon.filter((pokemon) => {
+      return (
+        pokemon.attacks.fast.includes(req.params.name) ||
+        pokemon.attacks.special.includes(req.params.name)
+      );
+    });
+    if (pokemon.length === 0) {
+      res.sendStatus(404);
+    } else {
+      res.json(pokemon);
+    }
+  });
+
   return app;
 };
 
