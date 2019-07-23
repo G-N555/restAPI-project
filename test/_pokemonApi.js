@@ -168,4 +168,11 @@ describe("Pokemon API Server", () => {
       res.body.name.should.eql(attack);
     });
   });
+
+  describe("should add a pokemon fast attack", () => {
+    it("should add a pokemon fast attack", async () => {
+      const res = await request.post("/api/attacks/fast");
+      res.body.length.should.eql(42);
+    });
+  });
 });

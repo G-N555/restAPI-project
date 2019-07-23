@@ -191,6 +191,11 @@ const setUpExpressServer = () => {
     }
   });
 
+  app.post("/api/attacks/fast", (req, res) => {
+    pokeData.attacks.fast.push(req.body);
+    res.json(pokeData.attacks.fast);
+  });
+
   return app;
 };
 
