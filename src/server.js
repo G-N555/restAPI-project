@@ -89,6 +89,63 @@ const setUpExpressServer = () => {
     }
   });
 
+  app.get("/api/types", (req, res) => {
+    const limit = req.query.limit;
+    if (limit === undefined) {
+      res.json(pokeData.types);
+    } else {
+      res.json(pokeData.types.slice(0, limit));
+    }
+  });
+
+  app.post("/api/types", (req, res) => {
+    pokeData.types.push(req.body);
+    res.json(pokeData.types);
+  });
+
+  app.delete("/api/types/:idOrName", (req, res) => {
+    const index = _.findIndex(
+      pokeData.types,
+      (type) => type === req.params.idOrName
+    );
+    if (index === -1) {
+      res.sendStatus(404);
+    } else {
+      const type = pokeData.types.splice(index, 1);
+      res.json({ deletedTypes: type[0] });
+    }
+  });
+
+  app.get("/api/types/:idOrName/pokemon", (req, res) => {
+    const index = _.findIndex(
+      pokeData.types,
+      (type) => type === req.params.idOrName
+    );
+    if (index === -1) {
+      res.sendStatus(404);
+    } else {
+      const pokemonsByType = pokeData.pokemon.filter((pokemon) => {
+        if (pokemon.types) {
+          return pokemon.types.includes(pokeData.types[index]);
+        }
+        return false;
+      });
+      res.json(pokemonsByType);
+    }
+  });
+
+  app.get("/api/attacks", (req, res) => {
+    const limit = req.query.limit;
+    if (limit === undefined) {
+      res.json(pokeData.attacks);
+    } else {
+      const fast = pokeData.attacks.fast;
+      const special = pokeData.attacks.special;
+      const combine = fast.concat(special);
+      res.json(combine.slice(0, limit));
+    }
+  });
+
   return app;
 };
 

@@ -28,6 +28,7 @@ describe("Pokemon API Server", () => {
       res.body.length.should.eql(limit);
     });
   });
+
   describe("should add a pokemon", () => {
     it("should add a pokemon", async () => {
       const res = await request.post("/api/pokemon");
@@ -35,6 +36,7 @@ describe("Pokemon API Server", () => {
       res.body.length.should.eql(152);
     });
   });
+
   describe("should get a pokemon by Id", () => {
     it("should get a pokemon by Id", async () => {
       const res = await request.get("/api/pokemon/42");
@@ -45,6 +47,7 @@ describe("Pokemon API Server", () => {
       res.body.id.should.eql("151");
     });
   });
+
   describe("should modify something in the pokemon", () => {
     it("should modify name", async () => {
       const payload = { name: "Go" };
@@ -52,19 +55,22 @@ describe("Pokemon API Server", () => {
       res.body.name.should.eql("Go");
     });
   });
+
   describe("should delete a given pokemon", () => {
     it("should delete the given pokemon", async () => {
       const res = await request.delete("/api/pokemon/bulbasaur");
       res.body.name.should.eql("Bulbasaur");
     });
   });
+
   describe("should return the evolutions", () => {
     it("should return an array", async () => {
       const res = await request.get("/api/pokemon/Charmander/evolutions");
       res.body.length.should.eql(2);
     });
   });
-  describe.only("should return the previous evolutions", () => {
+
+  describe("should return the previous evolutions", () => {
     it("should return an array", async () => {
       const res = await request.get(
         "/api/pokemon/Venusaur/evolutions/previous"
@@ -75,6 +81,56 @@ describe("Pokemon API Server", () => {
     it("should return an array", async () => {
       const res = await request.get("/api/pokemon/17/evolutions/previous");
       res.body.should.deep.eql([{ id: 16, name: "Pidgey" }]);
+    });
+  });
+
+  describe("should return the list of all types", () => {
+    it("should return the list of all types", async () => {
+      const res = await request.get("/api/types");
+      res.body.length.should.eql(17);
+    });
+    it("should return the number of types", async () => {
+      const limit = 5;
+      const res = await request.get(`/api/types`).query({ limit: 5 });
+      res.should.be.json;
+      res.body.length.should.eql(limit);
+    });
+  });
+
+  describe("should add a pokemon type", () => {
+    it("should add a pokemon type", async () => {
+      const res = await request.post("/api/types");
+      res.body.length.should.eql(18);
+    });
+  });
+
+  describe("should delete a pokemon type by name", () => {
+    it("should delete a pokemon type by name", async () => {
+      const type = "Electric";
+      const res = await request.delete(`/api/types/${type}`);
+      res.body.should.eql({ deletedTypes: "Electric" });
+    });
+  });
+
+  describe("should return a list of pokemon by type", () => {
+    it("should return a list of pokemon by type", async () => {
+      const type = "Fire";
+      const res = await request.get(`/api/types/${type}/pokemon`);
+      res.body.length.should.eql(12);
+    });
+  });
+
+  describe("should return the list of all attacks", () => {
+    it("should return the list of all attacks", async () => {
+      const res = await request.get("/api/attacks");
+      res.body.fast.length.should.eql(41);
+      res.body.special.length.should.eql(83);
+    });
+    it("should return the number of attacks", async () => {
+      const limit = 5;
+      const res = await request.get(`/api/attacks`).query({ limit: 5 });
+      res.should.be.json;
+      res.body.length.should.eql(limit);
     });
   });
 });
