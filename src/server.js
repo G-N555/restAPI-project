@@ -16,6 +16,7 @@ const setUpExpressServer = () => {
       res.json(pokeData.pokemon.slice(0, limit));
     }
   });
+
   app.post("/api/pokemon", (req, res) => {
     pokeData.pokemon.push(req.body);
     res.json(pokeData.pokemon);
@@ -177,6 +178,7 @@ const setUpExpressServer = () => {
       res.json(attack);
     }
   });
+
   app.get("/api/attacks/:name/pokemon", (req, res) => {
     const pokemon = pokeData.pokemon.filter((pokemon) => {
       return (
@@ -194,6 +196,42 @@ const setUpExpressServer = () => {
   app.post("/api/attacks/fast", (req, res) => {
     pokeData.attacks.fast.push(req.body);
     res.json(pokeData.attacks.fast);
+  });
+
+  app.post("/api/attacks/special", (req, res) => {
+    pokeData.attacks.special.push(req.body);
+    res.json(pokeData.attacks.special);
+  });
+
+  app.patch("/api/attacks/:name", (req, res) => {
+    const fast = pokeData.attacks.fast;
+    const special = pokeData.attacks.special;
+    const combine = fast.concat(special);
+    const attack = _.find(combine, (attack) => attack.name === req.params.name);
+    _.extend(attack, req.body);
+    res.json(attack);
+  });
+
+  app.delete("/api/attacks/:name", (req, res) => {
+    const fast = pokeData.attacks.fast;
+    const special = pokeData.attacks.special;
+    const fastIndex = _.findIndex(
+      fast,
+      (attack) => attack.name === req.params.name
+    );
+    const specialIndex = _.findIndex(
+      special,
+      (attack) => attack.name === req.params.name
+    );
+    let attack;
+    if (fastIndex === -1 && specialIndex === -1) {
+      res.setStatus(404);
+    } else if (fastIndex !== -1) {
+      attack = pokeData.attacks.fast.splice(fastIndex, 1);
+    } else {
+      attack = pokeData.attacks.special.splice(specialIndex, 1);
+    }
+    res.json(...attack);
   });
 
   return app;

@@ -175,4 +175,27 @@ describe("Pokemon API Server", () => {
       res.body.length.should.eql(42);
     });
   });
+
+  describe("should add a pokemon special attack", () => {
+    it("should add a pokemon special attack", async () => {
+      const res = await request.post("/api/attacks/special");
+      res.body.length.should.eql(84);
+    });
+  });
+
+  describe("should change attack name", () => {
+    it("should change attack name", async () => {
+      const payload = { name: "GoPunch" };
+      const res = await request.patch(`/api/attacks/Tackle`).send(payload);
+      res.body.name.should.eql("GoPunch");
+    });
+  });
+
+  describe("should delete a attack", () => {
+    it("should delete a attack", async () => {
+      const attack = "GoPunch";
+      const res = await request.delete(`/api/attacks/${attack}`);
+      res.body.name.should.eql(attack);
+    });
+  });
 });
