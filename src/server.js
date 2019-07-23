@@ -31,6 +31,7 @@ const setUpExpressServer = () => {
       (pokemon) => pokemon.name.toLowerCase() === id.toLowerCase()
     );
   }
+
   app.get("/api/pokemon/:id", (req, res) => {
     const pokeFindById = findPokemon(req, "id");
 
@@ -60,7 +61,18 @@ const setUpExpressServer = () => {
       res.json(...pokemon);
     }
   });
-
+  app.get("/api/pokemon/:idOrName/evolutions", (req, res) => {
+    const pokeFindById = findPokemon(req, "idOrName");
+    if (pokeFindById === undefined) {
+      res.sendStatus(404);
+    } else {
+      let evolutions = pokeFindById.evolutions;
+      if (evolutions === undefined) {
+        evolutions = [];
+      }
+      res.json(evolutions);
+    }
+  });
   return app;
 };
 

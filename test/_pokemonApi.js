@@ -60,8 +60,8 @@ describe("Pokemon API Server", () => {
   });
   describe("should return the evolutions", () => {
     it("should return an array", async () => {
-      const res = await request.get("/api/pokemon/:idOrName/evolutions");
-      //res.body.length.should.eql()
+      const res = await request.get("/api/pokemon/Charmander/evolutions");
+      res.body.length.should.eql(2);
     });
   });
 });
